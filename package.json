@@ -1,0 +1,42 @@
+{
+  "name": "@palerock/ref",
+  "version": "0.0.1",
+  "description": "reference function for javascript",
+  "main": "build/ref.js",
+  "scripts": {
+    "build-source": "webpack --progress --env production=false ",
+    "build-mini": "webpack --env production=true --progress",
+    "build": "npm run build-source && npm run build-mini",
+    "do-publish": "npm run build && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canguser/ref.git"
+  },
+  "keywords": [
+    "javascript",
+    "ref",
+    "frame"
+  ],
+  "files": [
+    "build",
+    "readme.md",
+    "LICENSE",
+    "package.json",
+    "package-lock.json"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.1.0",
+    "webpack": "^5.2.0",
+    "webpack-cli": "^4.1.0"
+  },
+  "author": "Cangshi",
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/canguser/ref/issues"
+  },
+  "homepage": "https://github.com/canguser/ref#readme"
+}
