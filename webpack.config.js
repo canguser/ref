@@ -10,7 +10,7 @@ module.exports = env => {
             filename: env.production === 'true' ? 'ref-mini.js' : 'ref.js',
             //path:指定打包后的文件放在那里
             path: path.resolve(__dirname, "build"),
-            libraryTarget: "umd",
+            libraryTarget: "umd2",
             globalObject: "typeof self !== 'undefined' ? self : this"
         },
         module: {
