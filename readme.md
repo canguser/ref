@@ -49,8 +49,10 @@
 
     console.log(dom.innerHTML); // Hello Ref JS
     ```
-2. Using with multi vars
+2. Using with multi vars in `NodeJS`
     ```javascript
+    const {ref} = require('@palerock/ref');
+
     const dataSource = {
         project: {
             name: 'project 01'
@@ -64,8 +66,8 @@
         dataSource,
         {
             // declare vars and setting the initial values
-            projectName = 'Unknown Project Name',
-            ownerName = 'Unknown Owner Name'
+            projectName: 'Unknown Project Name',
+            ownerName: 'Unknown Owner Name'
         },
         ({projectName, ownerName}, targetDataSource)=>{
             targetDataSource.project.name = projectName;
