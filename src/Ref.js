@@ -26,9 +26,31 @@ export default class Ref {
         });
     }
 
-    vars(vars = []) {
+    vars(vars) {
+
+        let keys;
+        if (vars instanceof Array) {
+            keys = vars;
+        } else if (typeof vars === 'object') {
+            keys = Object.keys(vars);
+            keys.forEach(
+                key => {
+                    if (this._originTarget[key] === undefined) {
+                        this._originTarget[key] = vars[key];
+                    }
+                }
+            )
+        }
         if (!this._vars || this._vars.length === 0) {
-            this._vars = vars;
+            this._vars = keys;
+        } else if (this._vars.length > 0) {
+            keys.forEach(
+                key => {
+                    if (!this._vars.includes(key)) {
+                        this._vars.push(key);
+                    }
+                }
+            )
         }
         return this;
     }
