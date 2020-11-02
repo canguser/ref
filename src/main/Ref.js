@@ -42,11 +42,27 @@ export default class Ref {
                 // console.log(propertyName);
                 if (links.length > 0) {
                     links.forEach(link => {
-                        link.action(this.proxy);
+                        if (typeof link.action === 'function') {
+                            link.action(this.proxy);
+                        }
                     })
                 }
             }
         });
+    }
+
+    infectAll(callback) {
+        this.infect(Object.keys(this.vars), callback);
+    }
+
+    infect(vars, callback) {
+        vars.forEach(
+            variable => {
+                this._addMappedLink(variable, new Link(
+                    callback
+                ))
+            }
+        )
     }
 
     _getMappedLinks(varName) {
@@ -58,6 +74,9 @@ export default class Ref {
         if (!links.includes(link)) {
             links.push(link);
             this.varsMapping[varName] = links;
+            if (!(varName in this.vars)) {
+                this.vars[varName] = undefined;
+            }
         }
     }
 

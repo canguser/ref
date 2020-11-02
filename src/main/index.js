@@ -1,6 +1,7 @@
 import Ref from "./Ref";
 import Link from "./Link";
 import Utils from "../utils";
+import InitialValue from "./InitialValue";
 
 /**
  * @param target {Object}
@@ -40,6 +41,10 @@ export const refs = function (targets = [], vars, mapping) {
     return proxy;
 };
 
+export const initial = function (value) {
+    return new InitialValue(value);
+};
+
 export const createRef = function (initialVars = {}) {
     const linkRef = new Ref(initialVars);
     return linkRef.proxy;
@@ -48,3 +53,5 @@ export const createRef = function (initialVars = {}) {
 export const link = function (...args) {
     return new Link(...args);
 };
+
+export {Ref, Link, InitialValue};

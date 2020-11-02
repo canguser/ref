@@ -17,20 +17,32 @@ return /******/ (() => { // webpackBootstrap
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ref": () => /* binding */ ref,
-/* harmony export */   "refs": () => /* binding */ refs
+/* harmony export */   "refs": () => /* binding */ refs,
+/* harmony export */   "initial": () => /* binding */ initial,
+/* harmony export */   "createRef": () => /* binding */ createRef,
+/* harmony export */   "link": () => /* binding */ link,
+/* harmony export */   "Ref": () => /* reexport safe */ _Ref__WEBPACK_IMPORTED_MODULE_0__.default,
+/* harmony export */   "Link": () => /* reexport safe */ _Link__WEBPACK_IMPORTED_MODULE_1__.default,
+/* harmony export */   "InitialValue": () => /* reexport safe */ _InitialValue__WEBPACK_IMPORTED_MODULE_3__.default
 /* harmony export */ });
 /* harmony import */ var _Ref__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+/* harmony import */ var _Link__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
+/* harmony import */ var _InitialValue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
+
 
 
 /**
@@ -41,7 +53,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  */
 
 var ref = function ref(target, vars, mapping) {
-  return new _Ref__WEBPACK_IMPORTED_MODULE_0__.default().bind(target, mapping).vars(vars).proxy;
+  var varsList = _utils__WEBPACK_IMPORTED_MODULE_2__.default.getKeysOfConfiguration(vars);
+  var r = new _Ref__WEBPACK_IMPORTED_MODULE_0__.default(vars);
+  var proxy = r.proxy;
+
+  var _iterator = _createForOfIteratorHelper(varsList),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var variable = _step.value;
+      proxy[variable] = link(function (params) {
+        mapping(params, target);
+      });
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  return proxy;
 };
 /**
  * @param targets {Array<Object>}
@@ -54,15 +86,46 @@ var refs = function refs() {
   var targets = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var vars = arguments.length > 1 ? arguments[1] : undefined;
   var mapping = arguments.length > 2 ? arguments[2] : undefined;
-  var ref = new _Ref__WEBPACK_IMPORTED_MODULE_0__.default();
-  ref.vars(vars);
+  var varsList = _utils__WEBPACK_IMPORTED_MODULE_2__.default.getKeysOfConfiguration(vars);
+  var r = new _Ref__WEBPACK_IMPORTED_MODULE_0__.default(vars);
+  var proxy = r.proxy;
 
-  _toConsumableArray(targets).forEach(function (t) {
-    ref.bind(t, mapping);
-  });
+  var _iterator2 = _createForOfIteratorHelper(varsList),
+      _step2;
 
-  return ref.proxy;
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var variable = _step2.value;
+      proxy[variable] = link(function (params) {
+        targets.forEach(function (target) {
+          mapping(params, target);
+        });
+      });
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
+  return proxy;
 };
+var initial = function initial(value) {
+  return new _InitialValue__WEBPACK_IMPORTED_MODULE_3__.default(value);
+};
+var createRef = function createRef() {
+  var initialVars = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var linkRef = new _Ref__WEBPACK_IMPORTED_MODULE_0__.default(initialVars);
+  return linkRef.proxy;
+};
+var link = function link() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return _construct(_Link__WEBPACK_IMPORTED_MODULE_1__.default, args);
+};
+
 
 /***/ }),
 /* 1 */
@@ -73,8 +136,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => /* binding */ Ref
 /* harmony export */ });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+/* harmony import */ var _Link__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -95,78 +157,97 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
 var Ref = /*#__PURE__*/function () {
   function Ref() {
     var _this = this;
 
-    var vars = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    var targetMappings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+    var initialVars = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Ref);
 
-    this._vars = vars;
-    this._targetMappings = targetMappings;
-    this._originTarget = {};
-    this.proxy = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProxyChain(this._originTarget, function (_ref) {
+    if (!_utils__WEBPACK_IMPORTED_MODULE_0__.default.isConfigurableObject(initialVars)) {
+      initialVars = {};
+    }
+
+    this.vars = initialVars || {};
+    this.varsMapping = {};
+    this.proxy = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProxyChain(this.vars, function (_ref) {
       var _ref$origin = _slicedToArray(_ref.origin, 3),
           name = _ref$origin[1],
           value = _ref$origin[2],
           parentNames = _ref.info.parentNames;
 
       var propertyChain = parentNames.concat(name);
-      var originValue = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProperty(_this._originTarget, propertyChain);
-      _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(_this._originTarget, propertyChain, value);
+      var propertyName = propertyChain[0];
+      var originValue = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProperty(_this.vars, propertyChain);
 
-      if (_this._vars.includes(propertyChain[0]) && originValue !== value) {
-        // call related methods
-        _this._targetMappings.forEach(function (mapping) {
-          mapping.doing.call(mapping.target, _this._originTarget, mapping.target);
-        });
+      if (value instanceof _Link__WEBPACK_IMPORTED_MODULE_1__.default) {
+        value.applyVar(propertyName);
+
+        _this._addMappedLink(propertyName, value); // apply related vars
+
+
+        if (value.vars && value.vars.length > 0) {
+          value.vars.forEach(function (variable) {
+            _this._addMappedLink(variable, value);
+          });
+        } // console.log(value.initialValue, originValue)
+
+
+        if (value.initialValue !== undefined && originValue === undefined) {
+          // console.log(propertyChain, value.initialValue);
+          _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(_this.vars, propertyChain, value.initialValue);
+        }
+      } else {
+        _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(_this.vars, propertyChain, value); // console.log('propertyChain', propertyChain);
+
+        var links = _this._getMappedLinks(propertyName); // console.log(propertyName);
+
+
+        if (links.length > 0) {
+          links.forEach(function (link) {
+            if (typeof link.action === 'function') {
+              link.action(_this.proxy);
+            }
+          });
+        }
       }
     });
   }
 
   _createClass(Ref, [{
-    key: "vars",
-    value: function vars(_vars) {
-      var _this2 = this;
-
-      var keys;
-
-      if (_vars instanceof Array) {
-        keys = _vars;
-      } else if (_typeof(_vars) === 'object') {
-        keys = Object.keys(_vars);
-        keys.forEach(function (key) {
-          if (_this2._originTarget[key] === undefined) {
-            _this2._originTarget[key] = _vars[key];
-          }
-        });
-      }
-
-      if (!this._vars || this._vars.length === 0) {
-        this._vars = keys;
-      } else if (this._vars.length > 0) {
-        keys.forEach(function (key) {
-          if (!_this2._vars.includes(key)) {
-            _this2._vars.push(key);
-          }
-        });
-      }
-
-      return this;
+    key: "infectAll",
+    value: function infectAll(callback) {
+      this.infect(Object.keys(this.vars), callback);
     }
   }, {
-    key: "bind",
-    value: function bind(target, doing) {
-      if (typeof doing === 'function') {
-        this._targetMappings.push({
-          target: target,
-          doing: doing
-        });
-      }
+    key: "infect",
+    value: function infect(vars, callback) {
+      var _this2 = this;
 
-      return this;
+      vars.forEach(function (variable) {
+        _this2._addMappedLink(variable, new _Link__WEBPACK_IMPORTED_MODULE_1__.default(callback));
+      });
+    }
+  }, {
+    key: "_getMappedLinks",
+    value: function _getMappedLinks(varName) {
+      return this.varsMapping[varName] || [];
+    }
+  }, {
+    key: "_addMappedLink",
+    value: function _addMappedLink(varName, link) {
+      var links = this._getMappedLinks(varName);
+
+      if (!links.includes(link)) {
+        links.push(link);
+        this.varsMapping[varName] = links;
+
+        if (!(varName in this.vars)) {
+          this.vars[varName] = undefined;
+        }
+      }
     }
   }]);
 
@@ -340,6 +421,22 @@ var Utils = /*#__PURE__*/function () {
       return true;
     }
   }, {
+    key: "isConfigurableObject",
+    value: function isConfigurableObject(obj) {
+      return _typeof(obj) === 'object' && !(obj instanceof Array) && !(obj instanceof Date) && Object.prototype.toString.call(obj) === '[object Object]';
+    }
+  }, {
+    key: "getKeysOfConfiguration",
+    value: function getKeysOfConfiguration(config) {
+      if (this.isConfigurableObject(config)) {
+        return Object.keys(config);
+      } else if (config instanceof Array) {
+        return config;
+      }
+
+      return [];
+    }
+  }, {
     key: "test",
     value: function test(describe, cb) {
       try {
@@ -385,6 +482,153 @@ var Utils = /*#__PURE__*/function () {
 
   return Utils;
 }();
+
+
+
+/***/ }),
+/* 3 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => /* binding */ Link
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Link = /*#__PURE__*/function () {
+  function Link() {
+    _classCallCheck(this, Link);
+
+    this.extraVars = [];
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (_typeof(args[0]) === 'object') {
+      var vars = args[0],
+          action = args[1],
+          initialValue = args[2];
+
+      if (vars instanceof Array) {
+        this.setVars(vars);
+        this.setAction(action);
+        this.setInitialValue(initialValue);
+      }
+    } else if (typeof args[0] === 'function') {
+      var _action = args[0],
+          _initialValue = args[1];
+      this.setAction(_action);
+      this.setInitialValue(_initialValue);
+    }
+  }
+
+  _createClass(Link, [{
+    key: "setInitialValue",
+    value: function setInitialValue(value) {
+      // console.log('initial',value);
+      if (this.initialValue === undefined) {
+        this.initialValue = value;
+      }
+    }
+  }, {
+    key: "setAction",
+    value: function setAction() {
+      var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {
+        return undefined;
+      };
+
+      if (!this.action && typeof action === 'function') {
+        this.action = action;
+      }
+    }
+  }, {
+    key: "applyVar",
+    value: function applyVar(variable) {
+      this.mainlyVar = variable;
+    }
+  }, {
+    key: "setVars",
+    value: function setVars() {
+      var vars = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      this.extraVars = vars;
+    }
+  }, {
+    key: "vars",
+    get: function get() {
+      return [this.mainlyVar].concat(_toConsumableArray(this.extraVars));
+    }
+  }]);
+
+  return Link;
+}();
+
+
+
+/***/ }),
+/* 4 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => /* binding */ InitialValue
+/* harmony export */ });
+/* harmony import */ var _Link__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+var InitialValue = /*#__PURE__*/function (_Link) {
+  _inherits(InitialValue, _Link);
+
+  var _super = _createSuper(InitialValue);
+
+  function InitialValue(value) {
+    var _this;
+
+    _classCallCheck(this, InitialValue);
+
+    _this = _super.call(this);
+    _this.initialValue = value;
+    return _this;
+  }
+
+  return InitialValue;
+}(_Link__WEBPACK_IMPORTED_MODULE_0__.default);
 
 
 

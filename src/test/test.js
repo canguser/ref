@@ -1,5 +1,6 @@
-import {createRef, link, ref, refs} from "../main";
+import {createRef, initial, link, ref, refs} from "../main";
 import Utils from "../utils";
+import Ref from "../main/Ref";
 
 Utils.test(
     'normal-test',
@@ -124,4 +125,26 @@ Utils.test('new-feature', ({equals}) => {
 
     equals(100, data.a);
     equals(300, data.b);
+});
+
+Utils.test('infect-initial', ({equals}) => {
+
+    const data = {};
+
+    const r = new Ref();
+    const proxy = r.proxy;
+
+    proxy.name = initial('Ryan');
+    proxy.age = initial(24);
+
+    r.infectAll(() => {
+        data.name = proxy.name;
+        data.age = proxy.age;
+    });
+
+    proxy.age++;
+
+    equals(25, data.age);
+    equals('Ryan', data.name);
+
 });
