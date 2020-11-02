@@ -138,4 +138,22 @@ export default class Utils {
             console.error(`Testing: ${describe} failed...`)
         }
     }
+
+    static waitTodo(ms, params) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(params);
+            }, ms);
+        });
+    }
+
+    static delay(context, apiName, ms) {
+        const eqName = `_delay_${apiName}`;
+        clearTimeout(context[eqName]);
+        return new Promise(resolve => {
+            context[eqName] = setTimeout(() => {
+                resolve(true);
+            }, ms);
+        });
+    }
 }

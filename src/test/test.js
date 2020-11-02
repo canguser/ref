@@ -2,6 +2,8 @@ import {createRef, initial, link, ref, refs} from "../main";
 import Utils from "../utils";
 import Ref from "../main/Ref";
 
+Ref.setDefaultOption({isAsync: false});
+
 Utils.test(
     'normal-test',
     ({equals}) => {

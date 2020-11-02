@@ -1,14 +1,19 @@
 import Utils from "../utils";
 import Link from "./Link";
 
+const defaultOptions = {
+    isAsync: true
+};
+
 export default class Ref {
 
-    constructor(initialVars = {}) {
+    constructor(initialVars = {}, options) {
         if (!Utils.isConfigurableObject(initialVars)) {
             initialVars = {};
         }
         this.vars = initialVars || {};
         this.varsMapping = {};
+        this.options = {...defaultOptions, ...options};
 
         this.proxy = Utils.getProxyChain(this.vars, (
             {
@@ -40,15 +45,26 @@ export default class Ref {
                 // console.log('propertyChain', propertyChain);
                 const links = this._getMappedLinks(propertyName);
                 // console.log(propertyName);
-                if (links.length > 0) {
-                    links.forEach(link => {
-                        if (typeof link.action === 'function') {
-                            link.action(this.proxy);
-                        }
-                    })
+                const actions = () => {
+                    if (links.length > 0) {
+                        links.forEach(link => {
+                            if (typeof link.action === 'function') {
+                                link.action(this.proxy);
+                            }
+                        })
+                    }
+                };
+                if (this.isAsync) {
+                    Utils.delay(this, 'waitAssign', 0).then(() => actions());
+                } else {
+                    actions();
                 }
             }
         });
+    }
+
+    get isAsync() {
+        return !!this.options.isAsync;
     }
 
     infectAll(callback) {
@@ -78,6 +94,10 @@ export default class Ref {
                 this.vars[varName] = undefined;
             }
         }
+    }
+
+    static setDefaultOption(options) {
+        Object.assign(defaultOptions, options);
     }
 
 }

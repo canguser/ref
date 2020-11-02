@@ -45,8 +45,8 @@ export const initial = function (value) {
     return new InitialValue(value);
 };
 
-export const createRef = function (initialVars = {}) {
-    const linkRef = new Ref(initialVars);
+export const createRef = function (initialVars = {}, options) {
+    const linkRef = new Ref(initialVars, options);
     return linkRef.proxy;
 };
 
