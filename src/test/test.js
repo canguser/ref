@@ -1,9 +1,4 @@
-/**
- *
- *
- *
- */
-import {createRef, link, ref} from "../main";
+import {createRef, link, ref, refs} from "../main";
 import Utils from "../utils";
 
 Utils.test(
@@ -28,9 +23,9 @@ Utils.test(
         };
         r.c1.e = 99;
 
-        equals(a.b, 'das');
-        equals(a.c.d, 3);
-        equals(a.c.e, 99);
+        equals('das', a.b);
+        equals(3, a.c.d);
+        equals(99, a.c.e);
     }
 );
 
@@ -59,8 +54,36 @@ Utils.test('node-demo-01', ({equals}) => {
 
     dataRef.projectName = 'project ref name';
 
-    equals(dataSource.project.name, 'project ref name');
-    equals(dataSource.owner.name, 'Unknown Owner Name');
+    equals('project ref name', dataSource.project.name);
+    equals('Unknown Owner Name', dataSource.owner.name);
+});
+
+Utils.test('refs-testing', ({equals}) => {
+    const projects = [{
+        name: 'project 01',
+        startCount: 50
+    }, {
+        name: 'project 02',
+        startCount: 85
+    }];
+
+
+    const r = refs(projects, {
+        increment: 0
+    }, ({increment}, targetProject) => {
+        targetProject.startCount += increment;
+    });
+
+    r.increment = 1;
+
+    equals(51, projects[0].startCount);
+    equals(86, projects[1].startCount);
+
+    r.increment = 100;
+
+    equals(151, projects[0].startCount);
+    equals(186, projects[1].startCount);
+
 });
 
 
@@ -68,7 +91,10 @@ Utils.test('new-feature', ({equals}) => {
 
     const data = {a: 1, b: 2};
 
-    const r = createRef();
+    const r = createRef({
+        c: 50,
+        number: 20
+    });
 
     r.value = link(
         ({value}) => {
@@ -79,25 +105,23 @@ Utils.test('new-feature', ({equals}) => {
     r.number = link(
         ['value'],
         ({number, value}) => {
-            console.log(number, value);
             data.b = number + value
-        }, 20
+        }
     );
 
     r.c = link(
         ['value'],
         ({c, value}) => {
-            console.log('c', c, value);
             r.number = c + value;
-        }, 50
+        }
     );
 
     r.value = 100;
 
-    equals(data.b, 250);
+    equals(250, data.b);
 
-    r.c = 50;
+    r.c = 100;
 
-    equals(data.a, 100);
-    equals(data.b, 250);
+    equals(100, data.a);
+    equals(300, data.b);
 });

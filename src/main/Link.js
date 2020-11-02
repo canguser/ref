@@ -17,7 +17,7 @@ export default class Link {
     }
 
     setInitialValue(value) {
-        console.log('initial',value);
+        // console.log('initial',value);
         if (this.initialValue === undefined) {
             this.initialValue = value;
         }

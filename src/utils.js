@@ -98,6 +98,19 @@ export default class Utils {
         return true;
     }
 
+    static isConfigurableObject(obj) {
+        return typeof obj === 'object' && !(obj instanceof Array) && !(obj instanceof Date) && Object.prototype.toString.call(obj) === '[object Object]'
+    }
+
+    static getKeysOfConfiguration(config) {
+        if (this.isConfigurableObject(config)){
+            return Object.keys(config);
+        }else if (config instanceof Array){
+            return config;
+        }
+        return [];
+    }
+
     static test(describe, cb) {
         try {
             cb({

@@ -1,10 +1,10 @@
-import Utils from "./utils";
+import Utils from "../utils";
 import Link from "./Link";
 
-export default class LinkRef {
+export default class Ref {
 
     constructor(initialVars = {}) {
-        if (typeof initialVars !== 'object') {
+        if (!Utils.isConfigurableObject(initialVars)) {
             initialVars = {};
         }
         this.vars = initialVars || {};
@@ -30,16 +30,16 @@ export default class LinkRef {
                         }
                     )
                 }
-                console.log(value.initialValue, originValue)
+                // console.log(value.initialValue, originValue)
                 if (value.initialValue !== undefined && originValue === undefined) {
-                    console.log(propertyChain, value.initialValue);
+                    // console.log(propertyChain, value.initialValue);
                     Utils.setProperty(this.vars, propertyChain, value.initialValue);
                 }
             } else {
                 Utils.setProperty(this.vars, propertyChain, value);
-                console.log('propertyChain', propertyChain);
+                // console.log('propertyChain', propertyChain);
                 const links = this._getMappedLinks(propertyName);
-                console.log(propertyName);
+                // console.log(propertyName);
                 if (links.length > 0) {
                     links.forEach(link => {
                         link.action(this.proxy);

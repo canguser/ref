@@ -1,13 +1,11 @@
-import Ref from "./Ref";
-import LinkRef from "./LinkRef";
-import Link from "./Link";
-
 /**
  * @param target {Object}
  * @param vars {Object|Array}
  * @param mapping {function}
  * @return {*}
  */
+import Ref from "./Ref";
+
 export const ref = function (target, vars, mapping) {
     return new Ref().bind(target, mapping).vars(vars).proxy;
 };
@@ -27,11 +25,4 @@ export const refs = function (targets = [], vars, mapping) {
     return ref.proxy;
 };
 
-export const createRef = function (initialVars = {}) {
-    const linkRef = new LinkRef(initialVars);
-    return linkRef.proxy;
-};
-
-export const link = function (...args) {
-    return new Link(...args);
-};
+export const Ref = Ref;
