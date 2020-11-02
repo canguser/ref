@@ -9,7 +9,7 @@
     ```shell script
     yarn add @palerock/ref
     ```
-2. Download the source file - `/build/ref.js` or mini file `/build/ref-mini.js`
+2. Download the source file - `/build/ref.js` or mini file `/build/ref.mini.js`
 
 ### Using the script
 1. With `NodeJS`
