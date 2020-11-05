@@ -107,56 +107,76 @@ const defaultOptions = {
 class Ref {
 
     constructor(initialVars = {}, options) {
-        if (!_utils__WEBPACK_IMPORTED_MODULE_0__.default.isConfigurableObject(initialVars)) {
-            initialVars = {};
+        let vars = initialVars;
+        if (initialVars instanceof Array) {
+            vars = {};
+            for (const name of initialVars) {
+                if (typeof name === 'string') {
+                    vars[name] = undefined;
+                }
+            }
         }
-        this.vars = initialVars || {};
+        if (!_utils__WEBPACK_IMPORTED_MODULE_0__.default.isConfigurableObject(vars)) {
+            vars = {};
+        }
+        this.vars = vars || {};
         this.varsMapping = {};
         this.options = {...defaultOptions, ...options};
 
-        this.proxy = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProxyChain(this.vars, (
-            {
-                origin: [, name, value],
-                info: {parentNames}
-            }
-        ) => {
-            const propertyChain = parentNames.concat(name);
-            const propertyName = propertyChain[0];
-            const originValue = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProperty(this.vars, propertyChain);
-            if (value instanceof _Link__WEBPACK_IMPORTED_MODULE_1__.default) {
-                value.applyVar(propertyName);
-                this._addMappedLink(propertyName, value);
-                // apply related vars
-                if (value.vars && value.vars.length > 0) {
-                    value.vars.forEach(
-                        variable => {
-                            this._addMappedLink(variable, value);
-                        }
-                    )
+        this.proxy = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProxyChain(this.vars, {
+            get: (
+                {
+                    origin: [, name],
+                    info: {parentNames}
                 }
-                // console.log(value.initialValue, originValue)
-                if (value.initialValue !== undefined && originValue === undefined) {
-                    // console.log(propertyChain, value.initialValue);
-                    _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(this.vars, propertyChain, value.initialValue);
+            ) => {
+                const propertyChain = parentNames.concat(name);
+                this.declareVar(propertyChain[0]);
+            },
+            set: (
+                {
+                    origin: [, name, value],
+                    info: {parentNames}
                 }
-            } else {
-                _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(this.vars, propertyChain, value);
-                // console.log('propertyChain', propertyChain);
-                const links = this._getMappedLinks(propertyName);
-                // console.log(propertyName);
-                const actions = () => {
-                    if (links.length > 0) {
-                        links.forEach(link => {
-                            if (typeof link.action === 'function') {
-                                link.action(this.proxy);
+            ) => {
+                const propertyChain = parentNames.concat(name);
+                const propertyName = propertyChain[0];
+                const originValue = _utils__WEBPACK_IMPORTED_MODULE_0__.default.getProperty(this.vars, propertyChain);
+                if (value instanceof _Link__WEBPACK_IMPORTED_MODULE_1__.default) {
+                    value.applyVar(propertyName);
+                    this._addMappedLink(propertyName, value);
+                    // apply related vars
+                    if (value.vars && value.vars.length > 0) {
+                        value.vars.forEach(
+                            variable => {
+                                this._addMappedLink(variable, value);
                             }
-                        })
+                        )
                     }
-                };
-                if (this.isAsync) {
-                    _utils__WEBPACK_IMPORTED_MODULE_0__.default.delay(this, 'waitAssign', 0).then(() => actions());
+                    // console.log(value.initialValue, originValue)
+                    if (value.initialValue !== undefined && originValue === undefined) {
+                        // console.log(propertyChain, value.initialValue);
+                        _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(this.vars, propertyChain, value.initialValue);
+                    }
                 } else {
-                    actions();
+                    _utils__WEBPACK_IMPORTED_MODULE_0__.default.setProperty(this.vars, propertyChain, value);
+                    // console.log('propertyChain', propertyChain);
+                    const links = this._getMappedLinks(propertyName);
+                    // console.log(propertyName);
+                    const actions = () => {
+                        if (links.length > 0) {
+                            links.forEach(link => {
+                                if (typeof link.action === 'function') {
+                                    link.action(this.proxy);
+                                }
+                            })
+                        }
+                    };
+                    if (this.isAsync) {
+                        _utils__WEBPACK_IMPORTED_MODULE_0__.default.delay(this, 'waitAssign', 0).then(() => actions());
+                    } else {
+                        actions();
+                    }
                 }
             }
         });
@@ -164,6 +184,12 @@ class Ref {
 
     get isAsync() {
         return !!this.options.isAsync;
+    }
+
+    declareVar(name, value) {
+        if (!(name in this.vars)) {
+            this.vars[name] = value;
+        }
     }
 
     infectAll(callback) {
@@ -248,11 +274,12 @@ class Utils {
      * The proxy object will return the proxy for its children using the same set method.
      * @param target
      * @param set {function} - the method to hook all set method for the proxy.
+     * @param get
      * @param keepNull {boolean=} - if false, proxy object will just return the empty object instance
      * @param parentNames {Array=} - using to know the parent name for its children.
      * @returns {*}
      */
-    static getProxyChain(target, set, keepNull = true, parentNames = []) {
+    static getProxyChain(target, {set, get} = {}, keepNull = true, parentNames = []) {
         if (target == null && !keepNull) {
             target = {};
         }
@@ -260,11 +287,15 @@ class Utils {
             return target;
         }
         return new Proxy(target, {
-            get: (t, name) => {
+            get: (t, name, receiver) => {
                 if (typeof name === 'string' && name.startsWith('$')) {
                     return target[name.replace('$', '')];
                 }
-                return this.getProxyChain(t[name], set, keepNull, [...parentNames, name]);
+                get && (get instanceof Function) && get.call(t, {
+                    origin: [t, name, receiver],
+                    info: {parentNames}
+                });
+                return this.getProxyChain(t[name], {set, get}, keepNull, [...parentNames, name]);
             },
             set: (t, name, value, receiver) => {
                 set && (set instanceof Function) && set.call(t, {
@@ -314,9 +345,9 @@ class Utils {
     }
 
     static getKeysOfConfiguration(config) {
-        if (this.isConfigurableObject(config)){
+        if (this.isConfigurableObject(config)) {
             return Object.keys(config);
-        }else if (config instanceof Array){
+        } else if (config instanceof Array) {
             return config;
         }
         return [];

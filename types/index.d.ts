@@ -1,5 +1,15 @@
 export class Link {
+    /**
+     * @param vars {Array<string> | Object=} The related vars for this link
+     * @param action {function=} the infect action defined
+     * @param initialValue {*=} the initial value of declared var
+     */
     public constructor(vars?: Array<string> | Object, action?: Function, initialValue?: any)
+
+    /**
+     * @param action {function=} the infect action defined
+     * @param initialValue {*=} the initial value of declared var
+     */
     public constructor(action?: Function, initialValue?: any)
 
     public setInitialValue(): void
@@ -52,8 +62,17 @@ export function refs(target: Array<Object>, vars: Array<string> | Object, mappin
 
 export function initial(value: any): InitialValue;
 
+/**
+ * @param vars {Array<string> | Object=} The related vars for this link
+ * @param action {function=} the infect action defined
+ * @param initialValue {*=} the initial value of declared var
+ */
 export function link(vars?: Array<string> | Object, action?: Function, initialValue?: any): Link;
 
+/**
+ * @param action {function=} the infect action defined
+ * @param initialValue {*=} the initial value of declared var
+ */
 export function link(action?: Function, initialValue?: any): Link;
 
 export function createRef(initialVars?: Object | Array<string>, options?: {

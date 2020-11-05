@@ -102,5 +102,7 @@
         - `ref`: `Object` the ref Object
         - `target`: `Object` the target Object
 
+- More APIs please find the definition or comments from [`./types/index.d.ts`](./types/index.d.ts)
+
 
 ## Leave your comments with any question or suggestion please
