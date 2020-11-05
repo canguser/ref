@@ -1,6 +1,6 @@
 {
   "name": "@palerock/ref",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "reference function for javascript",
   "main": "build/ref.js",
   "scripts": {

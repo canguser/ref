@@ -8,56 +8,76 @@ const defaultOptions = {
 export default class Ref {
 
     constructor(initialVars = {}, options) {
-        if (!Utils.isConfigurableObject(initialVars)) {
-            initialVars = {};
+        let vars = initialVars;
+        if (initialVars instanceof Array) {
+            vars = {};
+            for (const name of initialVars) {
+                if (typeof name === 'string') {
+                    vars[name] = undefined;
+                }
+            }
         }
-        this.vars = initialVars || {};
+        if (!Utils.isConfigurableObject(vars)) {
+            vars = {};
+        }
+        this.vars = vars || {};
         this.varsMapping = {};
         this.options = {...defaultOptions, ...options};
 
-        this.proxy = Utils.getProxyChain(this.vars, (
-            {
-                origin: [, name, value],
-                info: {parentNames}
-            }
-        ) => {
-            const propertyChain = parentNames.concat(name);
-            const propertyName = propertyChain[0];
-            const originValue = Utils.getProperty(this.vars, propertyChain);
-            if (value instanceof Link) {
-                value.applyVar(propertyName);
-                this._addMappedLink(propertyName, value);
-                // apply related vars
-                if (value.vars && value.vars.length > 0) {
-                    value.vars.forEach(
-                        variable => {
-                            this._addMappedLink(variable, value);
-                        }
-                    )
+        this.proxy = Utils.getProxyChain(this.vars, {
+            get: (
+                {
+                    origin: [, name],
+                    info: {parentNames}
                 }
-                // console.log(value.initialValue, originValue)
-                if (value.initialValue !== undefined && originValue === undefined) {
-                    // console.log(propertyChain, value.initialValue);
-                    Utils.setProperty(this.vars, propertyChain, value.initialValue);
+            ) => {
+                const propertyChain = parentNames.concat(name);
+                this.declareVar(propertyChain[0]);
+            },
+            set: (
+                {
+                    origin: [, name, value],
+                    info: {parentNames}
                 }
-            } else {
-                Utils.setProperty(this.vars, propertyChain, value);
-                // console.log('propertyChain', propertyChain);
-                const links = this._getMappedLinks(propertyName);
-                // console.log(propertyName);
-                const actions = () => {
-                    if (links.length > 0) {
-                        links.forEach(link => {
-                            if (typeof link.action === 'function') {
-                                link.action(this.proxy);
+            ) => {
+                const propertyChain = parentNames.concat(name);
+                const propertyName = propertyChain[0];
+                const originValue = Utils.getProperty(this.vars, propertyChain);
+                if (value instanceof Link) {
+                    value.applyVar(propertyName);
+                    this._addMappedLink(propertyName, value);
+                    // apply related vars
+                    if (value.vars && value.vars.length > 0) {
+                        value.vars.forEach(
+                            variable => {
+                                this._addMappedLink(variable, value);
                             }
-                        })
+                        )
                     }
-                };
-                if (this.isAsync) {
-                    Utils.delay(this, 'waitAssign', 0).then(() => actions());
+                    // console.log(value.initialValue, originValue)
+                    if (value.initialValue !== undefined && originValue === undefined) {
+                        // console.log(propertyChain, value.initialValue);
+                        Utils.setProperty(this.vars, propertyChain, value.initialValue);
+                    }
                 } else {
-                    actions();
+                    Utils.setProperty(this.vars, propertyChain, value);
+                    // console.log('propertyChain', propertyChain);
+                    const links = this._getMappedLinks(propertyName);
+                    // console.log(propertyName);
+                    const actions = () => {
+                        if (links.length > 0) {
+                            links.forEach(link => {
+                                if (typeof link.action === 'function') {
+                                    link.action(this.proxy);
+                                }
+                            })
+                        }
+                    };
+                    if (this.isAsync) {
+                        Utils.delay(this, 'waitAssign', 0).then(() => actions());
+                    } else {
+                        actions();
+                    }
                 }
             }
         });
@@ -65,6 +85,12 @@ export default class Ref {
 
     get isAsync() {
         return !!this.options.isAsync;
+    }
+
+    declareVar(name, value) {
+        if (!(name in this.vars)) {
+            this.vars[name] = value;
+        }
     }
 
     infectAll(callback) {

@@ -138,15 +138,46 @@ Utils.test('infect-initial', ({equals}) => {
 
     proxy.name = initial('Ryan');
     proxy.age = initial(24);
+    proxy.count = 1;
+    data.gender = proxy.gender;
 
     r.infectAll(() => {
         data.name = proxy.name;
         data.age = proxy.age;
+        data.count = proxy.count;
+        data.gender = proxy.gender;
     });
 
+    equals(undefined, data.gender);
+
     proxy.age++;
+    proxy.count++;
+    proxy.gender = 'male';
 
     equals(25, data.age);
     equals('Ryan', data.name);
+    equals('male', data.gender);
+    equals(2, data.count);
+
+});
+
+Utils.test('array-vars', ({equals}) => {
+
+    const data = {};
+
+    const r = new Ref(['name', 'age']);
+
+    r.infectAll((ref) => {
+        data.name = ref.name;
+        data.age = ref.age;
+    });
+
+    const proxy = r.proxy;
+
+    proxy.name = 'Ryan';
+    proxy.age = 24;
+
+    equals('Ryan', data.name);
+    equals(24, data.age);
 
 });

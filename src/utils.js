@@ -37,11 +37,12 @@ export default class Utils {
      * The proxy object will return the proxy for its children using the same set method.
      * @param target
      * @param set {function} - the method to hook all set method for the proxy.
+     * @param get
      * @param keepNull {boolean=} - if false, proxy object will just return the empty object instance
      * @param parentNames {Array=} - using to know the parent name for its children.
      * @returns {*}
      */
-    static getProxyChain(target, set, keepNull = true, parentNames = []) {
+    static getProxyChain(target, {set, get} = {}, keepNull = true, parentNames = []) {
         if (target == null && !keepNull) {
             target = {};
         }
@@ -49,11 +50,15 @@ export default class Utils {
             return target;
         }
         return new Proxy(target, {
-            get: (t, name) => {
+            get: (t, name, receiver) => {
                 if (typeof name === 'string' && name.startsWith('$')) {
                     return target[name.replace('$', '')];
                 }
-                return this.getProxyChain(t[name], set, keepNull, [...parentNames, name]);
+                get && (get instanceof Function) && get.call(t, {
+                    origin: [t, name, receiver],
+                    info: {parentNames}
+                });
+                return this.getProxyChain(t[name], {set, get}, keepNull, [...parentNames, name]);
             },
             set: (t, name, value, receiver) => {
                 set && (set instanceof Function) && set.call(t, {
@@ -103,9 +108,9 @@ export default class Utils {
     }
 
     static getKeysOfConfiguration(config) {
-        if (this.isConfigurableObject(config)){
+        if (this.isConfigurableObject(config)) {
             return Object.keys(config);
-        }else if (config instanceof Array){
+        } else if (config instanceof Array) {
             return config;
         }
         return [];

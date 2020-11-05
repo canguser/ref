@@ -25,7 +25,7 @@ export class Ref {
     readonly options: Object;
     readonly proxy: Object;
 
-    public constructor(initialVars?: Object, options?: {
+    public constructor(initialVars?: Object | Array<string>, options?: {
         isAsync?: boolean
     })
 
@@ -41,6 +41,8 @@ export class Ref {
 
     public static setDefaultOption(options: Object): void
 
+    public declareVar(name: string, value?: any): void
+
 }
 
 
@@ -54,6 +56,6 @@ export function link(vars?: Array<string> | Object, action?: Function, initialVa
 
 export function link(action?: Function, initialValue?: any): Link;
 
-export function createRef(initialVars?: Object, options?: {
+export function createRef(initialVars?: Object | Array<string>, options?: {
     isAsync?: boolean
 }): Object;
