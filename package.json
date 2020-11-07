@@ -21,7 +21,10 @@
     "frame"
   ],
   "files": [
-    "build",
+    "build/ref.mini.js",
+    "build/ref.js",
+    "build/ref.js.map",
+    "build/ref.mini.js.map",
     "types",
     "readme.md",
     "LICENSE",
