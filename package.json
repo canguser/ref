@@ -7,6 +7,7 @@
     "build-source": "webpack --progress --env production=false ",
     "build-mini": "webpack --env production=true --progress",
     "build": "npm run build-source && npm run build-mini",
+    "rollup": "npx rollup -c",
     "test": "jest --coverage",
     "do-publish": "npm run build && npm publish --access public"
   },
@@ -39,6 +40,7 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.1.0",
     "jest": "^26.6.3",
+    "rollup": "^2.33.3",
     "webpack": "^5.2.0",
     "webpack-cli": "^4.1.0"
   },
